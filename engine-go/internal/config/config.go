@@ -7,7 +7,7 @@ import (
 )
 
 // Config holds runtime configuration for the Go engine service.
-// Only include what we need for initial health endpoints; extend as needed.
+// Only include what we need for initial endpoints and routing; extend as needed.
 type Config struct {
 	// HTTP
 	HTTPPort int    `envconfig:"PORT" default:"8080"`
@@ -20,9 +20,24 @@ type Config struct {
 	LogLevel string `envconfig:"LOG_LEVEL" default:"info"`
 
 	// Startup probe specific
-	// CacheWarmup toggles whether to attempt any lightweight warmups during startup probe
-	CacheWarmup bool          `envconfig:"CACHE_WARMUP_ENABLED" default:"true"`
+	CacheWarmup   bool          `envconfig:"CACHE_WARMUP_ENABLED" default:"true"`
 	WarmupTimeout time.Duration `envconfig:"WARMUP_TIMEOUT" default:"2s"`
+
+	// Feature flags (mirroring Django settings)
+	DetachedIntegrationsServer     bool `envconfig:"DETACHED_INTEGRATIONS_SERVER" default:"false"`
+	FeaturePrometheusExporter      bool `envconfig:"FEATURE_PROMETHEUS_EXPORTER_ENABLED" default:"false"`
+	FeatureTelegramIntegration     bool `envconfig:"FEATURE_TELEGRAM_INTEGRATION_ENABLED" default:"false"`
+	FeatureSlackIntegration        bool `envconfig:"FEATURE_SLACK_INTEGRATION_ENABLED" default:"false"`
+	FeatureMattermostIntegration   bool `envconfig:"FEATURE_MATTERMOST_INTEGRATION_ENABLED" default:"false"`
+	UnifiedSlackAppEnabled         bool `envconfig:"UNIFIED_SLACK_APP_ENABLED" default:"false"`
+	IsOpenSource                   bool `envconfig:"IS_OPEN_SOURCE" default:"true"`
+	Debug                          bool `envconfig:"DEBUG" default:"false"`
+	SilkProfilerEnabled            bool `envconfig:"SILK_PROFILER_ENABLED" default:"false"`
+	DrfSpectacularEnabled          bool `envconfig:"DRF_SPECTACULAR_ENABLED" default:"false"`
+
+	// Paths for admin/silk when enabled
+	OncallDjangoAdminPath string `envconfig:"ONCALL_DJANGO_ADMIN_PATH" default:"django-admin/"`
+	SilkPath              string `envconfig:"SILK_PATH" default:"silk/"`
 }
 
 // Load reads the environment into Config.
